@@ -4,7 +4,9 @@ document.addEventListener("DOMContentLoaded" , function() {
     taskInput = document.getElementById("task-input"),
     taskList = document.getElementById("task-list");
 
-    addButton.addEventListener("click" , () => addTask());
+    addButton.addEventListener("click" , function() {
+        addTask();
+    });
 
     taskInput.addEventListener("keypress" , function (event) {
         if(event.key === "Enter") {
@@ -26,8 +28,8 @@ document.addEventListener("DOMContentLoaded" , function() {
             removeBtn.textContent = "Remove";
             removeBtn.classList.add("remove-btn");
             removeBtn.onclick = () => li.remove();
-            li.append(removeBtn);
-            taskList.append(li);
+            li.appendChild(removeBtn);
+            taskList.appendChild(li);
             // clear value--
             taskInput.value = "";
         }
