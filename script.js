@@ -4,6 +4,16 @@ document.addEventListener("DOMContentLoaded" , function() {
     taskInput = document.getElementById("task-input"),
     taskList = document.getElementById("task-list");
 
+
+    // check of there are tasks --
+    function loadTasks() {
+        const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        // 'false' indicates not to save again to Local Storage
+        storedTasks.forEach(taskText => addTask(taskText, false)); 
+    }
+    loadTasks();
+
+
     addButton.addEventListener("click" , function() {
         addTask();
     });
@@ -15,8 +25,8 @@ document.addEventListener("DOMContentLoaded" , function() {
     });
 
 
-    function addTask() {
-        let taskText = taskInput.value.trim();
+    function addTask(task, save = true) {
+        let taskText = taskInput.value.trim() || task;
 
         // check on value---
         if(taskText){
@@ -27,7 +37,13 @@ document.addEventListener("DOMContentLoaded" , function() {
             let removeBtn = document.createElement("button");
             removeBtn.textContent = "Remove";
             removeBtn.classList.add("remove-btn");
-            removeBtn.onclick = () => li.remove();
+            removeBtn.onclick = function() {
+                li.remove();
+                // remove from local storage
+                let tasks = JSON.parse(localStorage.getItem("tasks"));
+                let filterdTasks = tasks.filter(task => task !== li.firstChild.textContent);
+                localStorage.setItem('tasks' , JSON.stringify(filterdTasks));
+            }
             li.appendChild(removeBtn);
             taskList.appendChild(li);
             // clear value--
@@ -36,8 +52,14 @@ document.addEventListener("DOMContentLoaded" , function() {
         else {
             alert("please add a task");
         }
+
+        if (save) {
+            const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+            storedTasks.push(taskText || task);
+            localStorage.setItem('tasks', JSON.stringify(storedTasks));
+        }
     };
 
-    addTask();
+    // addTask();
 });
 
